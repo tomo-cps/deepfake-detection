@@ -1,0 +1,30 @@
+base_path: "/mnt/data"
+
+data:
+  text_feature:
+    use: true
+    method: BERT        # TF-IDF, LSTM, BERT, BERT+BLIP
+  image_feature:
+    use: true
+    method: ResNet-50   # VGG-16, DenseNet-201, ViT-L/32, ResNet-50
+  caption_feature:
+    use: true
+    method: BERT        # TF-IDF, LSTM, BERT, BERT+BLIP
+
+  train_data: "train_fake_news.csv"
+  val_data: "val_fake_news.csv"
+  test_data: "test_fake_news.csv"
+  batch_size: 256
+
+model:
+  type: multi_modal_caption
+  input_size:
+    text: 768
+    image: 2048
+    caption: 768
+  hidden_size: 512
+  output_size: 1
+
+optimize: true # true false
+optuna:
+  n_trials: 2

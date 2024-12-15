@@ -1,38 +1,56 @@
-import os
-import gdown
-import zipfile
+# dataloaders/dataset.py
+from pathlib import Path
+from torch.utils.data import Dataset
+import torch
+import pandas as pd
+from features.build_features import TextFeatureExtractor, ImageFeatureExtractor
+import logging
+class MultiModalDataset(Dataset):
+    def __init__(self, base_path: Path, data_name: str, cfg) -> None:
+        self.base_path = base_path
+        self.cfg = cfg
+        self.df = self._load_data(base_path, data_name)
+        self.text_extractor = TextFeatureExtractor(self.cfg.data.text_feature.method) if self.cfg.data.text_feature.use else None
+        self.caption_extractor = TextFeatureExtractor(self.cfg.data.caption_feature.method) if self.cfg.data.caption_feature.use else None
+        self.image_extractor = ImageFeatureExtractor(self.cfg.data.image_feature.method) if self.cfg.data.image_feature.use else None
 
-def download_data_from_gdrive():
-    # Google Drive上のファイルの共有リンクからidを取得する必要があります。
-    # 例えば、共有リンクが
-    # "https://drive.google.com/file/d/1AbCdEfGhIjKlMnOpQRsTuVaWxyz/view?usp=sharing"
-    # の場合、idは "1AbCdEfGhIjKlMnOpQRsTuVaWxyz" となります。
-    file_id = "1zJ8_d6B62ZnuOqRhie6kTgzBtHDbCJbp"  # 実際のファイルIDを記入
-    url = f"https://drive.google.com/uc?id={file_id}"
-    zip_path = "data/fakenews_data_241214.zip"
-    extract_to = "data"
+    def _load_data(self, base_path: Path, data_name: str) -> pd.DataFrame:
+        df = pd.read_csv(base_path / data_name)
+        return df
 
-    # ZIPファイルのダウンロード
-    if not os.path.exists(zip_path):
-        print(f"Downloading {zip_path} from Google Drive...")
-        gdown.download(url, zip_path, quiet=False)
-        print("Download completed.")
-    else:
-        print(f"{zip_path} already exists. Skipping download.")
+    def __len__(self):
+        return len(self.df)
 
-    # ZIPファイルの解凍
-    if os.path.exists(zip_path):
-        print(f"Unzipping {zip_path} to {extract_to}...")
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_to)
-        print("Unzipping completed.")
+    def __getitem__(self, index):
+        row = self.df.iloc[index]
 
-        # 解凍後にZIPファイルを削除
-        print(f"Removing the ZIP file: {zip_path}")
-        os.remove(zip_path)
-        print("ZIP file removed.")
-    else:
-        print(f"{zip_path} not found. Cannot unzip.")
+        # テキスト特徴量抽出
+        text_embedding = torch.tensor([])
+        if self.text_extractor is not None:
+            text = row['text']
+            text_embedding = self.text_extractor.extract_features(text)
 
-if __name__ == "__main__":
-    download_data_from_gdrive()
+        # キャプション特徴量抽出
+        caption_embedding = torch.tensor([])
+        if self.caption_extractor is not None:
+            caption = row.get('imgcaption', "")
+            if not isinstance(caption, str) or not caption.strip():
+                logging.warning(f"Invalid or empty caption for row: {row}")
+                caption = text
+            caption_embedding = self.caption_extractor.extract_features(caption)
+
+        # 画像特徴量抽出
+        image_embedding = torch.tensor([])
+        if self.image_extractor is not None:
+            image_id = row['id']
+            image_path = self.base_path / 'selected_public_image_set' / f"{image_id}.jpg"
+            image_embedding = self.image_extractor.extract_features(image_path)
+
+        label = torch.tensor(row['2_way_label'], dtype=torch.long)
+
+        return {
+            'text_embedding': text_embedding,
+            'image_embedding': image_embedding,
+            'caption_embedding': caption_embedding,
+            'label': label
+        }

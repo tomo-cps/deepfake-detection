@@ -1,1 +1,1 @@
-python src/dataloaders/dataset.py
+python src/setup/download_dataset.py

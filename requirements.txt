@@ -5,3 +5,5 @@ torchvision
 torchaudio
 scikit-learn
 transformers
+hydra-core
+optuna
