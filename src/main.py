@@ -1,5 +1,4 @@
 import torch
-import logging
 import hydra
 from omegaconf import DictConfig
 
@@ -9,7 +8,8 @@ from optimization.optuna_tuner import run_optuna
 from models.train import train_model
 from models.eval import evaluate_model, save_evaluation_results
 
-logger = logging.getLogger(__name__)
+from utils.logger import setup_logger
+logger = setup_logger(__name__)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def run_training(cfg: DictConfig):    
@@ -27,7 +27,7 @@ def run_training(cfg: DictConfig):
         val_loader
     )
     logger.info("Running evaluating model...")
-    metrics, predictions = evaluate_model(model, test_loader)
+    metrics, predictions = evaluate_model(model, test_loader, loader_name="Test Loader")
     
     logger.info("Running saving results...")
     save_evaluation_results(cfg, model, metrics, predictions)

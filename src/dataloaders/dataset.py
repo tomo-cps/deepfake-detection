@@ -4,9 +4,12 @@ from torch.utils.data import Dataset
 import torch
 import pandas as pd
 from features.build_features import TextFeatureExtractor, ImageFeatureExtractor
-import logging
 from omegaconf import DictConfig
 from torch.utils.data import DataLoader
+
+from utils.logger import setup_logger
+logger = setup_logger(__name__)
+
 class MultiModalDataset(Dataset):
     def __init__(self, cfg: DictConfig, data_name: str) -> None:
         self.cfg = cfg
@@ -17,7 +20,7 @@ class MultiModalDataset(Dataset):
         self.image_extractor = ImageFeatureExtractor(self.cfg.data.image_feature.method) if self.cfg.data.image_feature.use else None
 
     def _load_data(self, base_path: Path, data_name: str) -> pd.DataFrame:
-        df = pd.read_csv(base_path / data_name).head(100)
+        df = pd.read_csv(base_path / data_name)
         return df
 
     def __len__(self):
@@ -37,7 +40,7 @@ class MultiModalDataset(Dataset):
         if self.caption_extractor is not None:
             caption = row.get('imgcaption', "")
             if not isinstance(caption, str) or not caption.strip():
-                logging.warning(f"Invalid or empty caption for row: {row}")
+                logger.warning(f"Invalid or empty caption for row: {row}")
                 caption = text
             caption_embedding = self.caption_extractor.extract_features(caption)
 
