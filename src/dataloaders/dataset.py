@@ -5,17 +5,19 @@ import torch
 import pandas as pd
 from features.build_features import TextFeatureExtractor, ImageFeatureExtractor
 import logging
+from omegaconf import DictConfig
+from torch.utils.data import DataLoader
 class MultiModalDataset(Dataset):
-    def __init__(self, base_path: Path, data_name: str, cfg) -> None:
-        self.base_path = base_path
+    def __init__(self, cfg: DictConfig, data_name: str) -> None:
         self.cfg = cfg
-        self.df = self._load_data(base_path, data_name)
+        self.base_path = Path(self.cfg.base_path)
+        self.df = self._load_data(self.base_path, data_name)
         self.text_extractor = TextFeatureExtractor(self.cfg.data.text_feature.method) if self.cfg.data.text_feature.use else None
         self.caption_extractor = TextFeatureExtractor(self.cfg.data.caption_feature.method) if self.cfg.data.caption_feature.use else None
         self.image_extractor = ImageFeatureExtractor(self.cfg.data.image_feature.method) if self.cfg.data.image_feature.use else None
 
     def _load_data(self, base_path: Path, data_name: str) -> pd.DataFrame:
-        df = pd.read_csv(base_path / data_name)
+        df = pd.read_csv(base_path / data_name).head(100)
         return df
 
     def __len__(self):
@@ -54,3 +56,14 @@ class MultiModalDataset(Dataset):
             'caption_embedding': caption_embedding,
             'label': label
         }
+
+def create_dataloaders(cfg: DictConfig):
+    train_dataset = MultiModalDataset(cfg=cfg, data_name=cfg.data.train_data)
+    val_dataset = MultiModalDataset(cfg=cfg, data_name=cfg.data.val_data)
+    test_dataset = MultiModalDataset(cfg=cfg, data_name=cfg.data.test_data)
+
+    train_loader = DataLoader(train_dataset, batch_size=cfg.data.batch_size, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=cfg.data.batch_size, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=cfg.data.batch_size, shuffle=False)
+
+    return train_loader, val_loader, test_loader

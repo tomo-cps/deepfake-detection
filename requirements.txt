@@ -7,3 +7,5 @@ scikit-learn
 transformers
 hydra-core
 optuna
+tabulate
+rich

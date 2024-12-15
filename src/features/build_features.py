@@ -3,19 +3,10 @@ import torch
 from transformers import BertTokenizer, BertModel
 from PIL import Image
 from torchvision import transforms, models
-import joblib
 import torch.nn as nn
 Image.MAX_IMAGE_PIXELS = None
 
-# BLIP関連
-from transformers import BlipProcessor, BlipForConditionalGeneration
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
-########################################
-# テキスト特徴抽出クラス
-########################################
 
 class TextFeatureExtractor:
     def __init__(self, method: str):
@@ -75,11 +66,6 @@ class TextFeatureExtractor:
         else:
             return torch.zeros(768)
 
-
-########################################
-# 画像特徴抽出クラス
-########################################
-
 def create_image_feature_extractor(model: nn.Module, remove_last_layer: bool = True) -> nn.Module:
     # 分類層を取り除き、中間特徴を取得するための関数
     # モデルによって最後の層が異なるためモデルごとに処理分岐
@@ -119,10 +105,6 @@ def create_image_feature_extractor(model: nn.Module, remove_last_layer: bool = T
         )
         return feature_model
 
-    # ViT-L/32
-    # Vision Transformerはmodel.headsが最後の分類層
-    # clsトークン埋め込みはmodel.forward_features(image_tensor)で得られる
-    # 適当にクラスをラップして特徴のみ返す
     class ViTFeatureModel(nn.Module):
         def __init__(self, vit_model):
             super().__init__()
@@ -187,6 +169,10 @@ class ImageFeatureExtractor:
         image = Image.open(image_path).convert("RGB")
         if image.mode == "P" and "transparency" in image.info:
             print(f"Warning: Image with transparency found at {image_path}")
+        if image.mode == "P" and "transparency" in image.info:
+            image = image.convert("RGBA")
+        else:
+            image = image.convert("RGB")
         image_tensor = self.transform(image).unsqueeze(0).to(device)
         with torch.no_grad():
             features = self.feature_model(image_tensor)

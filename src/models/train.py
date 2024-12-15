@@ -1,16 +1,19 @@
 import traceback
 from tqdm import tqdm 
 import torch
-import torch.optim as optim
 import torch.nn as nn
-from torch.utils.data import DataLoader
+from omegaconf import DictConfig
 
 from models.eval import evaluate_model
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def train_model(model, train_loader, val_loader, num_epochs=1, patience=3, learning_rate=1e-5):
+def train_model(cfg: DictConfig, model, train_loader, val_loader):
     try:
+        num_epochs=cfg.training.num_epochs
+        patience=cfg.training.patience
+        learning_rate=cfg.training.learning_rate
+        
         optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
         criterion = nn.BCELoss()
         model.to(device)
