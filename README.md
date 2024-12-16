@@ -3,48 +3,15 @@
 
 ### 1. 基本的な実行方法
 
-
+```
+pip install -r requirements.txt
+```
+```
+python src/main.py
+```
 ### 2.モデルの選択
-```
-base_path: "/mnt/data"
 
-data:
-  text_feature:
-    use: true
-    method: BERT        # TF-IDF, LSTM, BERT
-  image_feature:
-    use: true
-    method: ResNet-50   # VGG-16, DenseNet-201, ViT-L/32, ResNet-50
-  caption_feature:
-    use: true
-    method: BERT        # TF-IDF, LSTM, BERT, BERT+BLIP
-
-  train_data: "train_fake_news.csv"
-  val_data: "val_fake_news.csv"
-  test_data: "test_fake_news.csv"
-  batch_size: 256
-
-model:
-  type: multi_modal_with_caption_using_cross_attention  # multi_modal, multi_modal_with_caption, multi_modal_with_caption_using_cross_attention
-  input_size:
-    text: 768
-    image: 2048
-    caption: 768
-  hidden_size: 512
-  output_size: 1
-  num_heads: 3  # Cross-Attentionに使用（必要な場合）
-
-training:
-  learning_rate: 1e-3
-  patience: 3
-  num_epochs: 1
-
-optimize: false # true false
-optuna:
-  n_trials: 1 #20
-  trial_epochs: 1 #5
-  eval_epochs: 1 #1
-```
+- configs/config.yaml で変更することができます．
 
 
 ### 3. 入力データ形式

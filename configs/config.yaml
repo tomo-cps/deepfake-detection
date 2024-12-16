@@ -1,8 +1,20 @@
 base_path: "/mnt/data"
 
-train:
-  mode: false # true or false
-  optimize: true # true or false
+training_config:
+  is_training: false     # Enable/disable training mode
+    is_optimizing: true
+  is_inference: true
+  is_visualizing: true
+
+optuna:
+  n_trials: 1  # 20
+  trial_epochs: 1  # 5
+  eval_epochs: 1  # 20
+
+inference:
+  run_output_dir: "/home/tomo/Documents/deepfake-detection/outputs/2024-12-17/02-23-25/"
+  batch_size: 256
+  is_visualization: true
 
 data:
   text_feature:
@@ -35,12 +47,3 @@ training:
   learning_rate: 1e-3
   patience: 3
   num_epochs: 5
-
-optuna:
-  n_trials: 1  # 20
-  trial_epochs: 1  # 5
-  eval_epochs: 1  # 20
-
-inference:
-  run_output_dir: "/home/tomo/Documents/deepfake-detection/outputs/2024-12-17/02-23-25/"
-  batch_size: 256

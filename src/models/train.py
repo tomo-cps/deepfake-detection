@@ -2,13 +2,38 @@ from tqdm import tqdm
 import torch
 import torch.nn as nn
 from omegaconf import DictConfig
-from models.eval import evaluate_model
+
+from dataloaders.dataset import create_dataloaders
+from models.model_arch import create_model
+from models.eval import evaluate_model, save_evaluation_results
 
 from utils.logger import setup_logger
 logger = setup_logger(__name__)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+def run_training(cfg: DictConfig):    
+    logger.info(f"Running training using \033[1;36m Fake News Detection using \"{cfg.model.type}\" Model\033[0m")
+    train_loader, val_loader, test_loader = create_dataloaders(cfg)
+    
+    logger.info("Running creating model...")
+    hidden_size = cfg.model.hidden_size
+    dropout_rate = cfg.model.dropout_rate
+    model = create_model(cfg, hidden_size, dropout_rate)
+    
+    logger.info("Running training model...")
+    train_model(
+        cfg,
+        model, 
+        train_loader, 
+        val_loader
+    )
+    logger.info("Running evaluating model...")
+    metrics, predictions = evaluate_model(model, test_loader, loader_name="Test Loader")
+    
+    logger.info("Running saving results...")
+    save_evaluation_results(cfg, model, metrics, predictions)
+    
 def train_model(cfg: DictConfig, model, train_loader, val_loader):
     try:
         num_epochs = cfg.training.num_epochs

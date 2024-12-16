@@ -90,7 +90,7 @@ def save_evaluation_results(cfg: DictConfig, model, metrics, predictions):
 
     metrics_with_info = {
         "time": now.strftime("%Y-%m-%d %H:%M:%S"),
-        "optimize": cfg.train.optimize,
+        "optimize": cfg.training_config.is_training.is_optimizing,
         "method": model_name,
         **metrics
     }

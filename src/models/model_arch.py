@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from omegaconf import DictConfig
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -68,8 +70,13 @@ class MultiModalClassifierWithCaptionUsingAttention(nn.Module):
         caption_embedding = caption_embedding.unsqueeze(1)  # [Batch, 1, CaptionFeature]
         
         # Cross-Attention: Query = caption, Key & Value = text
-        attended_text, _ = self.cross_attention(query=caption_embedding, key=text_embedding, value=text_embedding)
+        attended_text, attention_weights = self.cross_attention(
+            query=caption_embedding, key=text_embedding, value=text_embedding
+        )
         attended_text = attended_text.squeeze(1)  # Remove sequence dimension after attention
+        
+        # 注意重みを保存
+        # self.attention_weights = attention_weights
         
         combined = torch.cat((attended_text, image_embedding), dim=1)  # [Batch, CombinedFeature]
         
@@ -80,6 +87,25 @@ class MultiModalClassifierWithCaptionUsingAttention(nn.Module):
         x = self.sigmoid(x)
         
         return x
+    
+    # def visualize_attention(self, text_tokens, caption_tokens):
+    #     """
+    #     注意重みを可視化するメソッド
+    #     - text_tokens: テキストトークンのリスト
+    #     - caption_tokens: キャプショントークンのリスト
+    #     """
+    #     if self.attention_weights is None:
+    #         raise ValueError("Attention weights are not available. Forward pass must be run first.")
+        
+    #     # 注意重みを取り出す（最初のバッチ）
+    #     attention = self.attention_weights[0].detach().cpu().numpy()
+        
+    #     plt.figure(figsize=(10, 8))
+    #     sns.heatmap(attention, xticklabels=text_tokens, yticklabels=caption_tokens, cmap="viridis", annot=True)
+    #     plt.xlabel("Text Tokens")
+    #     plt.ylabel("Caption Tokens")
+    #     plt.title("Attention Weights")
+    #     plt.show()
 
 def create_model(cfg: DictConfig, hidden_size, dropout_rate):
     model_type = cfg.model.type
