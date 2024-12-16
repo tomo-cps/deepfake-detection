@@ -159,9 +159,9 @@ def save_evaluation_results(cfg: DictConfig, model, metrics, predictions):
     date_str = now.strftime("%Y-%m-%d")
     time_str = now.strftime("%H%M%S")
 
-    checkpoints_dir = f"output/checkpoints/{date_str}"
-    results_dir = f"output/results/{date_str}"
-    predictions_dir = f"output/results/{date_str}"
+    checkpoints_dir = f"output/checkpoints/"
+    results_dir = f"output/results/"
+    predictions_dir = f"output/results/"
 
     os.makedirs(checkpoints_dir, exist_ok=True)
     os.makedirs(results_dir, exist_ok=True)
@@ -169,7 +169,7 @@ def save_evaluation_results(cfg: DictConfig, model, metrics, predictions):
 
     model_name = cfg.model.type
 
-    model_path = f"{checkpoints_dir}/{model_name}_model_{time_str}.pth"
+    model_path = f"{checkpoints_dir}/{model_name}_model.pth"
     torch.save(model.state_dict(), model_path)
 
     metrics_with_info = {
@@ -179,11 +179,11 @@ def save_evaluation_results(cfg: DictConfig, model, metrics, predictions):
         **metrics
     }
 
-    results_path = f"{results_dir}/metrics_{model_name}_{time_str}.json"
+    results_path = f"{results_dir}/metrics_{model_name}.json"
     with open(results_path, 'w') as f:
         json.dump(metrics_with_info, f, indent=4)
 
-    predictions_path = f"{predictions_dir}/predictions_{model_name}_{time_str}.csv"
+    predictions_path = f"{predictions_dir}/predictions_{model_name}.csv"
     predictions.to_csv(predictions_path, index=False)
 
     logger.info(f"Model saved at {model_path}")
