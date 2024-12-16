@@ -64,7 +64,7 @@ true_label,prediction
 Terminal に出力された log 情報
 ```
 [2024-12-17 02:23:25,841][optimization.optuna_tuner][INFO] - Starting Optuna hyperparameter optimization...
-[2024-12-17 02:23:25,841][optimization.optuna_tuner][INFO] - Running training using Fake News Detection using "multi_modal" Model
+[2024-12-17 02:23:25,841][optimization.optuna_tuner][INFO] - Running training using Fake News Detection using "multi_modal" Model
 [2024-12-17 02:23:25,842][optimization.objective][INFO] - Starting trial 0:
 [2024-12-17 02:23:25,842][optimization.objective][INFO] - Proposed hyperparameters - Learning Rate: 2.9811659606981014e-05, Batch Size: 128, Hidden Size: 256
 [2024-12-17 02:23:30,073][optimization.objective][INFO] - Using MultiModalClassifier model
