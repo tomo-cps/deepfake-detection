@@ -24,15 +24,15 @@ python src/main.py
 - **`id`**: 検出対象の画像 id
 - **`imgcaption`**: 検出対象の画像キャプション
 - **`2_way_label`**: 2 種類のラベル
-  - `0`True: リアルニュース
-  - `1`False: フェイクニュース
+  - {`0`: True} リアルニュース
+  - {`1`:False} フェイクニュース
 - **`6_way_label`**: 6 種類のラベル
-  - `0`True: 事実に基づいた正確な情報
-  - `1`Satire/Parody: 風刺的やパロディ的な要素を含む，虚偽の情報
-  - `2`Misleading Content: 意図的にユーザーを誤導する情報
-  - `3`Imposter Content: ボットによって生成された情報
-  - `4`False Connection: テキストと画像の内容が一致しない情報
-  - `5`Manipulated Content: 意図的に編集された情報
+  - {`0`: True} 事実に基づいた正確な情報
+  - {`1`: Satire/Parody} 風刺的やパロディ的な要素を含む，虚偽の情報
+  - {`2`: Misleading Content} 意図的にユーザーを誤導する情報
+  - {`3`: Imposter Content} ボットによって生成された情報
+  - {`4`: False Connection} テキストと画像の内容が一致しない情報
+  - {`5`: Manipulated Content} 意図的に編集された情報
 
 ### 4. 出力データ形式
 `./outputs/{実行した日にち}/{保存した時間}/`
