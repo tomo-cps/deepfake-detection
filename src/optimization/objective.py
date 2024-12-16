@@ -20,8 +20,8 @@ logger = setup_logger(__name__)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def objective(cfg: DictConfig, trial):
+    model_type = cfg.model.type
     learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-2, log=True)
-    # batch_size = trial.suggest_categorical("batch_size", [64, 128])
     batch_size = trial.suggest_categorical("batch_size", [64, 128, 256])
     hidden_size = trial.suggest_int("hidden_size", 64, 512, step=64)
     dropout_rate = trial.suggest_float('dropout_rate', 0.1, 0.5)
@@ -35,7 +35,6 @@ def objective(cfg: DictConfig, trial):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
-    model_type = cfg.model.type
     if model_type == "multi_modal":
         model = MultiModalClassifier(cfg, hidden_size=hidden_size, dropout_rate=dropout_rate)
         logger.info("Using MultiModalClassifier model")
@@ -43,9 +42,9 @@ def objective(cfg: DictConfig, trial):
         model = MultiModalClassifierWithCaption(cfg, hidden_size=hidden_size, dropout_rate=dropout_rate)
         logger.info("Using MultiModalClassifierWithCaption model")
     elif model_type == "multi_modal_with_caption_using_cross_attention":
-        num_heads = cfg.model.get("num_heads", 3)
+        num_heads = trial.suggest_int('num_heads', 1, 4)
         model = MultiModalClassifierWithCaptionUsingAttention(cfg, hidden_size=hidden_size, dropout_rate=dropout_rate, num_heads=num_heads)
-        logger.info(f"Using MultiModalClassifierWithCaptionUsingAttention model with {num_heads} heads")
+        logger.info(f"Using MultiModalClassifierWithCaptionUsingAttention model with head size {num_heads}")
     else:
         logger.error(f"Unsupported model type: {model_type}")
         raise ValueError(f"Unsupported model type: {model_type}")

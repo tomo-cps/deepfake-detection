@@ -20,7 +20,7 @@ class MultiModalDataset(Dataset):
         self.image_extractor = ImageFeatureExtractor(self.cfg.data.image_feature.method) if self.cfg.data.image_feature.use else None
 
     def _load_data(self, base_path: Path, data_name: str) -> pd.DataFrame:
-        df = pd.read_csv(base_path / data_name)
+        df = pd.read_csv(base_path / data_name).head(100)
         return df
 
     def __len__(self):

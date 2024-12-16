@@ -1,5 +1,5 @@
 import hydra
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 import optuna
 import torch
 import os
@@ -40,14 +40,15 @@ def run_optuna(cfg: DictConfig):
     best_dropout_rate = best_params['dropout_rate']
     best_learning_rate = best_params['learning_rate']
     
-    # Updae cfg
+    # Update cfg
     cfg.data.batch_size = best_batch_size
     cfg.model.hidden_size = best_hidden_size
     cfg.model.dropout_rate = best_dropout_rate
     cfg.training.learning_rate = best_learning_rate
     cfg.training.num_epochs = cfg.optuna.eval_epochs
     
-
+    OmegaConf.save(config=cfg, f=".hydra/config.yaml")
+    
     logger.info("Retraining with best parameters from Optuna...")
     # 最良パラメータが反映されたcfgを用いて通常トレーニングフローを再実行
     run_training_for_optuna(cfg)

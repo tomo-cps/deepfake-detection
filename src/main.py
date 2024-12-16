@@ -4,6 +4,7 @@ from omegaconf import DictConfig
 
 from dataloaders.dataset import create_dataloaders
 from models.model_arch import create_model
+from models.inference import run_inference
 from optimization.optuna_tuner import run_optuna
 from models.train import train_model
 from models.eval import evaluate_model, save_evaluation_results
@@ -34,10 +35,14 @@ def run_training(cfg: DictConfig):
 
 @hydra.main(config_path="../configs", config_name="config")
 def main(cfg: DictConfig):
-    if cfg.optimize:
-        run_optuna(cfg)
-    else:
-        run_training(cfg)
+    run_inference(cfg)
+    # if cfg.train.mode:
+    #     if cfg.train.optimize:
+    #         run_optuna(cfg)
+    #     else:
+    #         run_training(cfg)
+    # else:
+    #     run_inference(cfg)
 
 if __name__ == "__main__":
     main()
