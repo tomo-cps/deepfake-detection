@@ -52,6 +52,7 @@ class MultiModalClassifierWithCaption(nn.Module):
 class MultiModalClassifierWithCaptionUsingAttention(nn.Module):
     def __init__(self, cfg: DictConfig, hidden_size, dropout_rate, num_heads=3):
         super(MultiModalClassifierWithCaptionUsingAttention, self).__init__()
+        self.cfg = cfg
         input_size_text = cfg.model.input_size.text
         input_size_image = cfg.model.input_size.image
         output_size = cfg.model.output_size
@@ -75,8 +76,7 @@ class MultiModalClassifierWithCaptionUsingAttention(nn.Module):
         )
         attended_text = attended_text.squeeze(1)  # Remove sequence dimension after attention
         
-        # 注意重みを保存
-        # self.attention_weights = attention_weights
+        self.attention_weights = attention_weights
         
         combined = torch.cat((attended_text, image_embedding), dim=1)  # [Batch, CombinedFeature]
         
@@ -86,26 +86,29 @@ class MultiModalClassifierWithCaptionUsingAttention(nn.Module):
         x = self.fc2(x)
         x = self.sigmoid(x)
         
+        if self.cfg.training_config.is_visualizing:
+            return x, attention_weights
+        
         return x
     
-    # def visualize_attention(self, text_tokens, caption_tokens):
-    #     """
-    #     注意重みを可視化するメソッド
-    #     - text_tokens: テキストトークンのリスト
-    #     - caption_tokens: キャプショントークンのリスト
-    #     """
-    #     if self.attention_weights is None:
-    #         raise ValueError("Attention weights are not available. Forward pass must be run first.")
+    def visualize_attention(self, text_tokens, caption_tokens):
+        """
+        注意重みを可視化するメソッド
+        - text_tokens: テキストトークンのリスト
+        - caption_tokens: キャプショントークンのリスト
+        """
+        if self.attention_weights is None:
+            raise ValueError("Attention weights are not available. Forward pass must be run first.")
         
-    #     # 注意重みを取り出す（最初のバッチ）
-    #     attention = self.attention_weights[0].detach().cpu().numpy()
+        # 注意重みを取り出す（最初のバッチ）
+        attention = self.attention_weights[0].detach().cpu().numpy()
         
-    #     plt.figure(figsize=(10, 8))
-    #     sns.heatmap(attention, xticklabels=text_tokens, yticklabels=caption_tokens, cmap="viridis", annot=True)
-    #     plt.xlabel("Text Tokens")
-    #     plt.ylabel("Caption Tokens")
-    #     plt.title("Attention Weights")
-    #     plt.show()
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(attention, xticklabels=text_tokens, yticklabels=caption_tokens, cmap="viridis", annot=True)
+        plt.xlabel("Text Tokens")
+        plt.ylabel("Caption Tokens")
+        plt.title("Attention Weights")
+        plt.show()
 
 def create_model(cfg: DictConfig, hidden_size, dropout_rate):
     model_type = cfg.model.type

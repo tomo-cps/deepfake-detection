@@ -9,3 +9,5 @@ hydra-core
 optuna
 tabulate
 rich
+matplotlib
+seaborn
