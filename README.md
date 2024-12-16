@@ -35,6 +35,42 @@ python src/main.py
   - `5`Manipulated Content: 意図的に編集された情報
 
 ### 4. 出力データ形式
+`./outputs/{実行した日にち}/{保存した時間}/`
+- `.hydra/config.yaml`
+  - 実行時の config.yaml 情報
+- `output/`
+  - `checkpoints/{検出モデル名}.pth` モデル保存パス
+- `results/`
+  - `metrics_{検出モデル名}.json` モデル保存パス
+```
+{
+    "time": "実行時の時間",
+    "optimize": true or false,
+    "method": "検出モデル名",
+    "accuracy": accuracy,
+    "precision": precision,
+    "recall": recall,
+    "f1_score": f1_score
+}
+```
+  - `predictions_{config.yamlのmodel.typeの検出モデル名}.csv`
+```
+true_label,prediction
+1,1
+0,1
+1,1
+```
+- `main.log`
+```
+[2024-12-17 02:23:25,841][optimization.optuna_tuner][INFO] - Starting Optuna hyperparameter optimization...
+[2024-12-17 02:23:25,841][optimization.optuna_tuner][INFO] - Running training using Fake News Detection using "multi_modal" Model
+[2024-12-17 02:23:25,842][optimization.objective][INFO] - Starting trial 0:
+[2024-12-17 02:23:25,842][optimization.objective][INFO] - Proposed hyperparameters - Learning Rate: 2.9811659606981014e-05, Batch Size: 128, Hidden Size: 256
+[2024-12-17 02:23:30,073][optimization.objective][INFO] - Using MultiModalClassifier model
+[2024-12-17 02:23:30,074][optimization.objective][INFO] - Model loaded to cuda
+```
+  - Terminal に出力された log 情報
+
 
 ### 5. ファイル構成
 
