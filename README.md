@@ -21,12 +21,12 @@ python src/main.py
 |    `str`     |   `str`    |     `str`   |    `int`    |    `int`    |
 
 - **`text`**: 検出対象のテキスト
-- **`id`**: 検出対象の画像id
+- **`id`**: 検出対象の画像 id
 - **`imgcaption`**: 検出対象の画像キャプション
-- **`2_way_label`**: 2種類のラベル
+- **`2_way_label`**: 2 種類のラベル
   - `0`True: リアルニュース
   - `1`False: フェイクニュース
-- **`6_way_label`**: 6種類のラベル
+- **`6_way_label`**: 6 種類のラベル
   - `0`True: 事実に基づいた正確な情報
   - `1`Satire/Parody: 風刺的やパロディ的な要素を含む，虚偽の情報
   - `2`Misleading Content: 意図的にユーザーを誤導する情報
