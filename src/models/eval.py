@@ -155,10 +155,6 @@ def _visualize_attention(attention_weights_list):
     plt.show()
 
 def save_evaluation_results(cfg: DictConfig, model, metrics, predictions):
-    now = datetime.now()
-    date_str = now.strftime("%Y-%m-%d")
-    time_str = now.strftime("%H%M%S")
-
     checkpoints_dir = f"output/checkpoints/"
     results_dir = f"output/results/"
     predictions_dir = f"output/results/"
