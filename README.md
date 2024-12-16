@@ -61,6 +61,7 @@ true_label,prediction
 1,1
 ```
 - `main.log`
+Terminal に出力された log 情報
 ```
 [2024-12-17 02:23:25,841][optimization.optuna_tuner][INFO] - Starting Optuna hyperparameter optimization...
 [2024-12-17 02:23:25,841][optimization.optuna_tuner][INFO] - Running training using Fake News Detection using "multi_modal" Model
@@ -69,7 +70,7 @@ true_label,prediction
 [2024-12-17 02:23:30,073][optimization.objective][INFO] - Using MultiModalClassifier model
 [2024-12-17 02:23:30,074][optimization.objective][INFO] - Model loaded to cuda
 ```
-  - Terminal に出力された log 情報
+
 
 
 ### 5. ファイル構成
