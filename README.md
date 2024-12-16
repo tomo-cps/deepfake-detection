@@ -16,6 +16,23 @@ python src/main.py
 
 ### 3. 入力データ形式
 
+|    text     |      id     | imgcaption  | 2_way_label | 6_way_label |
+|-------------|-------------|-------------|-------------|-------------|
+|    `str`     |   `str`    |     `str`   |    `int`    |    `int`    |
+
+- **`text`**: 検出対象のテキスト
+- **`id`**: 検出対象の画像id
+- **`imgcaption`**: 検出対象の画像キャプション
+- **`2_way_label`**: 2種類のラベル
+  - `0`: リアルニュース
+  - `1`: フェイクニュース
+- **`6_way_label`**: 6種類のラベル
+  - `0`: True 事実に基づいた正確な情報
+  - `1`: Satire/Parody 風刺的やパロディ的な要素を含む，虚偽の情報
+  - `2`: Misleading Content 意図的にユーザーを誤導する情報
+  - `3`: Imposter Content ボットによって生成された情報
+  - `4`: False Connection テキストと画像の内容が一致しない情報
+  - `5`: Manipulated Content 意図的に編集された情報
 
 ### 4. 出力データ形式
 
