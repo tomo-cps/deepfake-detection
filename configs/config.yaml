@@ -1,10 +1,10 @@
 base_path: "/mnt/data"
 
 training_config:
-  is_training: false     # Enable/disable training mode
+  is_training: true     # Enable/disable training mode
   is_optimizing: false
   is_inference: false
-  is_visualizing: true
+  is_visualizing: false
 
 optuna:
   n_trials: 1  # 20
