@@ -11,8 +11,8 @@ GPU: GeForce RTX-3090 Ti (Ampare architecture, 10752cores 24GByte, 450W)
 
 ### 1. 基本的な実行方法
 
-データセットを`/mnt/data/`に配置する
-https://drive.usercontent.google.com/download?id=1zJ8_d6B62ZnuOqRhie6kTgzBtHDbCJbp&authuser=1
+- データセットを`/mnt/data/`に配置する[rink](https://drive.usercontent.google.com/download?id=1zJ8_d6B62ZnuOqRhie6kTgzBtHDbCJbp&authuser=1)
+
 ```
 pip install -r requirements.txt
 ```
