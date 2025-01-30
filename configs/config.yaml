@@ -7,9 +7,9 @@ training_config:
   is_visualizing: false
 
 optuna:
-  n_trials: 1  # 20
-  trial_epochs: 1  # 5
-  eval_epochs: 1  # 20
+  n_trials: 20  # 20
+  trial_epochs: 5  # 5
+  eval_epochs: 20  # 20
 
 inference:
   run_output_dir: "/home/tomo/Documents/deepfake-detection/outputs/2024-12-17/02-23-25_test/"
@@ -33,7 +33,7 @@ data:
   batch_size: 256
 
 model:
-  type: multi_modal_with_caption_using_cross_attention  # multi_modal, multi_modal_with_caption, multi_modal_with_caption_using_cross_attention
+  type: multi_modal  # multi_modal, multi_modal_with_caption, multi_modal_with_caption_using_cross_attention
   input_size:
     text: 768
     image: 2048
