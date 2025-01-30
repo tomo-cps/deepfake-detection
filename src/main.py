@@ -14,7 +14,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 @hydra.main(version_base=None, config_path="../configs", config_name="config")
 def main(cfg: DictConfig):
     if cfg.training_config.is_training:
-        if cfg.training_config.is_training.is_optimizing:
+        if cfg.training_config.is_optimizing:
             run_optuna(cfg)
         else:
             run_training(cfg)

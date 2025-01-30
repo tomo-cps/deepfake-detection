@@ -1,0 +1,42 @@
+base_path: /mnt/data
+training_config:
+  is_training: true
+  is_optimizing: true
+  is_inference: false
+  is_visualizing: false
+optuna:
+  n_trials: 1
+  trial_epochs: 1
+  eval_epochs: 1
+inference:
+  run_output_dir: /home/tomo/Documents/deepfake-detection/outputs/2024-12-17/02-23-25_test/
+  batch_size: 256
+  is_visualization: true
+data:
+  text_feature:
+    use: true
+    method: BERT
+  image_feature:
+    use: true
+    method: ResNet-50
+  caption_feature:
+    use: true
+    method: BERT
+  train_data: train_fake_news.csv
+  val_data: val_fake_news.csv
+  test_data: test_fake_news.csv
+  batch_size: 128
+model:
+  type: multi_modal_with_caption_using_cross_attention
+  input_size:
+    text: 768
+    image: 2048
+    caption: 768
+  hidden_size: 512
+  dropout_rate: 0.48024878440231633
+  output_size: 1
+  num_heads: 3
+training:
+  learning_rate: 0.0002890056009532441
+  patience: 3
+  num_epochs: 1

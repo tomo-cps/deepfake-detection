@@ -155,9 +155,9 @@ def _visualize_attention(attention_weights_list):
     plt.show()
 
 def save_evaluation_results(cfg: DictConfig, model, metrics, predictions):
-    checkpoints_dir = f"output/checkpoints/"
-    results_dir = f"output/results/"
-    predictions_dir = f"output/results/"
+    checkpoints_dir = f"output/checkpoints"
+    results_dir = f"output/results"
+    predictions_dir = f"output/results"
 
     os.makedirs(checkpoints_dir, exist_ok=True)
     os.makedirs(results_dir, exist_ok=True)
@@ -167,7 +167,8 @@ def save_evaluation_results(cfg: DictConfig, model, metrics, predictions):
 
     model_path = f"{checkpoints_dir}/{model_name}_model.pth"
     torch.save(model.state_dict(), model_path)
-
+    
+    now = datetime.now()
     metrics_with_info = {
         "time": now.strftime("%Y-%m-%d %H:%M:%S"),
         "optimize": cfg.training_config.is_optimizing,

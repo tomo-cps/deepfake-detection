@@ -2,7 +2,7 @@ base_path: "/mnt/data"
 
 training_config:
   is_training: true     # Enable/disable training mode
-  is_optimizing: false
+  is_optimizing: true
   is_inference: false
   is_visualizing: false
 
