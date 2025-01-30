@@ -6,6 +6,8 @@
 OS: Ubuntu 22.04
 CPU: Intel Core i9-13900K (24 cores, 32 threads, 3.0 / 2.2GHz, Passmark 58998)
 GPU: GeForce RTX-3090 Ti (Ampare architecture, 10752cores 24GByte, 450W)
+
+Python 3.10.16
 ```
 
 
