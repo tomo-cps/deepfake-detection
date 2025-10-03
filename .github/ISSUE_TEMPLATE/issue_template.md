@@ -2,7 +2,7 @@
 name: Generic Issues
 about: 汎用的な Issue テンプレート
 title: ''
-labels: ''
+labels: 'status: todo'
 assignees: ''
 
 ---
