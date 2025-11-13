@@ -2,7 +2,7 @@
 name: Task Template
 about: 汎用的な task テンプレート
 title: ''
-labels: ''
+labels: '印象'
 assignees: ''
 ---
 
